@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3000;
 // Security middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || '*',
+  origin: process.env.CORS_ORIGIN || process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : false,
   credentials: true,
 }));
 
@@ -40,7 +40,8 @@ app.use((req, res, next) => {
 app.use('/api', routes);
 
 // Error handling middleware
-app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+app.use((err: Error, req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  void _next; // Suppress unused variable warning
   logger.error('Unhandled error:', err);
   
   res.status(500).json({
@@ -68,27 +69,46 @@ const startServer = async (): Promise<void> => {
       logger.info('Redis client initialized');
     }
 
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
       logger.info(`🚀 Server running on port ${PORT}`);
       logger.info(`📚 API documentation available at http://localhost:${PORT}/api/health`);
       logger.info(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
     });
+
+    // Handle graceful shutdown
+    const gracefulShutdown = async (signal: string): Promise<void> => {
+      logger.info(`${signal} received, shutting down gracefully`);
+      
+      server.close(async () => {
+        logger.info('HTTP server closed');
+        
+        try {
+          // Disconnect from Redis
+          const { disconnectRedis } = await import('./utils/redis');
+          await disconnectRedis();
+          logger.info('Redis connection closed');
+          
+          // Disconnect from Prisma
+          const { prisma } = await import('./utils/database');
+          await prisma.$disconnect();
+          logger.info('Database connection closed');
+          
+          process.exit(0);
+        } catch (error) {
+          logger.error('Error during shutdown:', error);
+          process.exit(1);
+        }
+      });
+    };
+
+    process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+    process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+    
   } catch (error) {
     logger.error('Failed to start server:', error);
     process.exit(1);
   }
 };
-
-// Handle graceful shutdown
-process.on('SIGTERM', () => {
-  logger.info('SIGTERM received, shutting down gracefully');
-  process.exit(0);
-});
-
-process.on('SIGINT', () => {
-  logger.info('SIGINT received, shutting down gracefully');
-  process.exit(0);
-});
 
 // Start the server
 startServer();

@@ -18,16 +18,22 @@ export const authenticateToken = (
     return;
   }
 
+  const jwtSecret = process.env.JWT_SECRET;
+  if (!jwtSecret) {
+    res.status(500).json(createErrorResponse('JWT configuration error'));
+    return;
+  }
+
   try {
     const decoded = jwt.verify(
       token,
-      process.env.JWT_SECRET!,
+      jwtSecret,
     ) as JwtPayload;
     
     req.user = decoded;
     next();
   } catch (error) {
-    logger.warn('Invalid token attempt:', { token: token.substring(0, 20) });
+    logger.warn('Invalid token attempt', { ip: req.ip });
     res.status(403).json(createErrorResponse('Invalid or expired token'));
   }
 };

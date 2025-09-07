@@ -1,4 +1,4 @@
-import { Question, User } from '@prisma/client';
+import { Question } from '@prisma/client';
 import { prisma } from '@/utils/database';
 import { AiService } from './aiService';
 import { logger } from '@/utils/logger';
@@ -159,12 +159,12 @@ export class QuestionService {
 
     const stats = await prisma.$queryRaw`
       SELECT 
-        DATE(created_at) as date,
+        DATE("createdAt") as date,
         COUNT(*)::int as count
       FROM questions 
-      WHERE company_id = ${companyId}
-        AND created_at >= ${startDate}
-      GROUP BY DATE(created_at)
+      WHERE "companyId" = ${companyId}
+        AND "createdAt" >= ${startDate}
+      GROUP BY DATE("createdAt")
       ORDER BY date DESC
     ` as QuestionStats[];
 
@@ -181,8 +181,8 @@ export class QuestionService {
         u.name as "userName",
         COUNT(q.id)::int as "questionCount"
       FROM users u
-      LEFT JOIN questions q ON u.id = q.user_id
-      WHERE u.company_id = ${companyId}
+      LEFT JOIN questions q ON u.id = q."userId"
+      WHERE u."companyId" = ${companyId}
       GROUP BY u.id, u.name
       ORDER BY "questionCount" DESC
       LIMIT ${limit}

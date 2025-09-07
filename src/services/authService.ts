@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { User, UserRole, Company } from '@prisma/client';
 import { prisma } from '@/utils/database';
 import { logger } from '@/utils/logger';
-import { AuthTokens, JwtPayload } from '@/types/api';
+import { AuthTokens } from '@/types/api';
 
 export class AuthService {
   private readonly jwtSecret: string;
@@ -12,8 +12,15 @@ export class AuthService {
   private readonly jwtRefreshExpiresIn: string;
 
   constructor() {
-    this.jwtSecret = process.env.JWT_SECRET!;
-    this.jwtRefreshSecret = process.env.JWT_REFRESH_SECRET!;
+    const jwtSecret = process.env.JWT_SECRET;
+    const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET;
+    
+    if (!jwtSecret || !jwtRefreshSecret) {
+      throw new Error('JWT secrets must be configured');
+    }
+    
+    this.jwtSecret = jwtSecret;
+    this.jwtRefreshSecret = jwtRefreshSecret;
     this.jwtExpiresIn = process.env.JWT_EXPIRES_IN || '15m';
     this.jwtRefreshExpiresIn = process.env.JWT_REFRESH_EXPIRES_IN || '7d';
   }
@@ -104,7 +111,7 @@ export class AuthService {
   async refreshToken(refreshToken: string): Promise<AuthTokens> {
     try {
       // Verify refresh token
-      const decoded = jwt.verify(refreshToken, this.jwtRefreshSecret) as any;
+      jwt.verify(refreshToken, this.jwtRefreshSecret);
 
       // Check if refresh token exists in database
       const tokenRecord = await prisma.refreshToken.findUnique({
@@ -145,12 +152,20 @@ export class AuthService {
     };
 
     // Generate access token
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const accessToken = (jwt as any).sign(payload, this.jwtSecret, {
       expiresIn: this.jwtExpiresIn,
     });
 
-    // Generate refresh token
-    const refreshToken = (jwt as any).sign(payload, this.jwtRefreshSecret, {
+    // Generate refresh token with unique timestamp
+    const refreshPayload = {
+      ...payload,
+      iat: Math.floor(Date.now() / 1000),
+      jti: `${user.id}-${Date.now()}`, // Unique identifier
+    };
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const refreshToken = (jwt as any).sign(refreshPayload, this.jwtRefreshSecret, {
       expiresIn: this.jwtRefreshExpiresIn,
     });
 

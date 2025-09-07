@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { QuestionController } from '@/controllers/questionController';
-import { authenticateToken } from '@/middleware/auth';
+import { authenticateToken, requireAdmin } from '@/middleware/auth';
 import { validateSchema, questionSchema, validateQuery, paginationSchema } from '@/middleware/validation';
 
 const router = Router();
@@ -26,6 +26,7 @@ router.get(
 // Get all company questions (for admins)
 router.get(
   '/company',
+  requireAdmin,
   validateQuery(paginationSchema),
   questionController.getCompanyQuestions,
 );

@@ -1,99 +1,257 @@
-# desafio-back-end-medsenior
-Desafio Técnico – Backend
+# 🚀 Plataforma AI Q&A Multi-Tenant
 
-# Desafio Técnico - Backend
+Uma plataforma robusta onde usuários de diferentes empresas podem fazer perguntas a uma IA e obter respostas, com completo isolamento multi-tenant e funcionalidades administrativas.
 
-## Contexto do problema
+## 📋 Funcionalidades
 
-[cite_start]Uma empresa deseja criar uma plataforma onde usuários de diferentes empresas possam fazer perguntas a uma IA e obter respostas. [cite: 3]
+### 🔐 **Autenticação & Autorização**
+- Registro e login de usuários com JWT + Refresh Token
+- Roles: Admin e User
+- Multi-tenant: cada empresa tem seus próprios usuários
 
-[cite_start]A aplicação precisa suportar multi-tenant, ou seja: [cite: 4]
-* [cite_start]Cada empresa tem seus próprios usuários. [cite: 5] [cite_start]Usuários só podem visualizar perguntas e respostas enviadas dentro da própria empresa. [cite: 5]
-* [cite_start]Administradores podem visualizar estatísticas de uso da empresa. [cite: 6]
+### 🤖 **Q&A com IA**
+- Integração com OpenAI (GPT-4o-mini)
+- Histórico de perguntas e respostas por usuário
+- Isolamento de dados por empresa
 
-## O que deve ser desenvolvido
+### 👥 **Multi-Tenant**
+- Usuários só visualizam dados da própria empresa
+- Isolamento completo de dados por `companyId`
 
-### [cite_start]Funcionalidades principais (requisitos mínimos) [cite: 8]
+### 📊 **Dashboard Admin**
+- Estatísticas de uso da empresa
+- Top usuários mais ativos
+- Métricas de perguntas por período
 
-1.  [cite_start]**Autenticação e autorização** [cite: 9]
-    * [cite_start]Usuário pode se registrar e se autenticar. [cite: 10]
-    * [cite_start]Login com JWT + Refresh Token. [cite: 11]
-    * [cite_start]Roles: Admin e User. [cite: 13]
-    * [cite_start]Usuários pertencem a uma empresa (Company). [cite: 15]
+### 🛡️ **Segurança & Performance**
+- Rate limiting configurável
+- Validação de entrada com Joi
+- Logs estruturados com Winston
+- Cache opcional com Redis
 
-2.  [cite_start]**Perguntas e respostas com IA** [cite: 16]
-    * [cite_start]Usuário autenticado envia uma pergunta para a IA. [cite: 17]
-    * [cite_start]O sistema registra no banco: [cite: 18]
-        * [cite_start]pergunta [cite: 19]
-        * [cite_start]resposta da IA [cite: 20]
-        * [cite_start]empresa [cite: 21]
-        * [cite_start]usuário [cite: 22]
-        * [cite_start]data/hora [cite: 23]
-    * [cite_start]O usuário pode listar apenas suas próprias perguntas/respostas. [cite: 24]
+## 🛠️ Tecnologias
 
-3.  [cite_start]**Multi-tenant** [cite: 25]
-    * [cite_start]Garantir que usuários só vejam os dados da empresa à qual pertencem. [cite: 27]
+- **Backend:** Node.js + TypeScript + Express
+- **Database:** PostgreSQL + Prisma ORM
+- **Cache:** Redis
+- **AI:** OpenAI API
+- **Auth:** JWT + Refresh Tokens
+- **Tests:** Jest
+- **DevOps:** Docker + Docker Compose
 
-4.  [cite_start]**Admin (dashboard básico)** [cite: 28]
-    * [cite_start]Endpoint para administradores da empresa consultarem estatísticas, ex.: [cite: 29]
-        * [cite_start]Quantidade de perguntas feitas por dia. [cite: 30]
-        * [cite_start]Top usuários que mais perguntaram. [cite: 31]
+## ⚡ Início Rápido
 
-5.  [cite_start]**Infraestrutura mínima** [cite: 32]
-    * [cite_start]Banco de dados relacional (PostgreSQL/MySQL). [cite: 33]
-    * [cite_start]Docker Compose (app + banco). [cite: 34]
-    * [cite_start]Documentação da API. [cite: 35]
-    * [cite_start]Validação de entrada. [cite: 36]
-    * [cite_start]Testes unitários básicos (services). [cite: 37]
-    * [cite_start]README com instruções para rodar. [cite: 38]
-    * [cite_start]CI/CD configurado para build + testes automáticos. [cite: 40]
+### **Pré-requisitos**
+- Node.js >= 18.0.0
+- Docker e Docker Compose (recomendado)
+- Git
 
-## [cite_start]Plus (não obrigatório, mas diferencia) [cite: 41]
+### **1. Clone o repositório**
+```bash
+git clone https://github.com/codingwiththi/desafio-back-end-medsenior.git
+cd desafio-back-end-medsenior
+```
 
-### [cite_start]Arquitetura [cite: 42]
-* [cite_start]Monorepo organizado com múltiplos serviços (microserviços) (auth-service, qa-service, etc.). [cite: 43]
-* [cite_start]API Gateway centralizando autenticação e roteamento (Kong, KrakenD, etc.). [cite: 44]
+### **2. Instale as dependências**
+```bash
+npm install
+```
 
-### [cite_start]Escalabilidade [cite: 45]
-* [cite_start]Cache com Redis. [cite: 46]
-* [cite_start]Fila para processamento assíncrono (BullMQ, RabbitMQ, Kafka). [cite: 47]
+### **3. Configure as variáveis de ambiente**
+```bash
+cp .env.example .env
+```
 
-### [cite_start]Observabilidade [cite: 48]
-* [cite_start]Logs estruturados. [cite: 49]
-* [cite_start]Métricas (Prometheus/Grafana). [cite: 50]
+Edite o arquivo `.env` com suas configurações:
+```bash
+# Database
+DATABASE_URL="postgresql://postgres:password@localhost:5432/medsenior_db"
 
-### [cite_start]Qualidade [cite: 51]
-* [cite_start]Testes de integração. [cite: 52]
-* [cite_start]Cobertura de testes alta. [cite: 53]
-* Algum formatador configurado. [cite_start]Ex: Biome. [cite: 54]
+# JWT (ALTERE ESTES SECRETS!)
+JWT_SECRET=seu-jwt-secret-super-secreto
+JWT_REFRESH_SECRET=seu-refresh-secret-super-secreto
 
-### [cite_start]Infra/DevOps [cite: 55]
-* [cite_start]Deploy em nuvem (AWS/GCP/Azure/Render/etc.). [cite: 56]
+# OpenAI (opcional - usa mock se não configurado)
+OPENAI_API_KEY=sk-sua-chave-openai-aqui
 
-### [cite_start]DX (Developer Experience) [cite: 57]
-* [cite_start]Scripts simples (npm dev, npm test). [cite: 58]
-* [cite_start]Setup rápido (clonar e rodar 1 comando para ter o app funcionando). [cite: 59, 60]
-* [cite_start]Documentação clara para novos devs. [cite: 61]
+# Redis (opcional)
+REDIS_URL=redis://localhost:6379
+```
 
-## [cite_start]Critérios de avaliação [cite: 62]
-* [cite_start]**Obrigatório:** requisitos mínimos funcionando. [cite: 63]
-* [cite_start]**Extra:** plus implementados. [cite: 64]
+### **4. Inicie o ambiente com Docker (Recomendado)**
+```bash
+# Inicia PostgreSQL + Redis + App
+npm run docker:up
 
-[cite_start]**O que será analisado:** [cite: 65]
-* [cite_start]Qualidade e clareza do código. [cite: 67]
-* [cite_start]Organização da arquitetura. [cite: 68]
-* [cite_start]Segurança e isolamento multi-tenant. [cite: 70]
-* [cite_start]Testabilidade e manutenibilidade. [cite: 71]
-* [cite_start]Documentação e DX. [cite: 72]
+# OU apenas o banco e Redis (se quiser rodar a app localmente)
+docker-compose up -d postgres redis
+```
 
-## [cite_start]Prazo [cite: 73]
-[cite_start]Recomendado: 5 dias. [cite: 74]
+### **5. Configure o banco de dados**
+```bash
+# Gera o cliente Prisma
+npm run db:generate
 
-## [cite_start]Entrega [cite: 75]
-[cite_start]Link para o repositório (GitHub/GitLab/Bitbucket). [cite: 76]
+# Executa as migrações
+npm run db:migrate
 
-Deve conter:
-* [cite_start]Código fonte. [cite: 77]
-* [cite_start]Arquivos Docker/Docker Compose. [cite: 78]
-* [cite_start]README com instruções claras. [cite: 79]
-* [cite_start]json do Insomnia ou Postman. [cite: 80]
+# (Opcional) Popula dados de teste
+npm run db:seed
+```
+
+### **6. Inicie a aplicação**
+
+**Desenvolvimento:**
+```bash
+npm run dev
+```
+
+**Produção:**
+```bash
+npm run build
+npm start
+```
+
+A API estará disponível em: **http://localhost:3000**
+
+## 🧪 Testes
+
+```bash
+# Executar todos os testes
+npm test
+
+# Testes em modo watch
+npm run test:watch
+
+# Cobertura de testes
+npm run test:coverage
+
+# Lint
+npm run lint
+
+# Corrigir problemas de lint automaticamente
+npm run lint:fix
+```
+
+## 📚 Documentação da API
+
+### **Importar no Postman/Insomnia**
+- **Postman:** Importe `postman-collection.json` + `postman-environment.json`
+- **Insomnia:** Importe `insomnia-collection.json`
+
+### **Endpoints Principais**
+
+#### **Autenticação**
+```bash
+POST /api/auth/register  # Registrar usuário e empresa
+POST /api/auth/login     # Login
+POST /api/auth/refresh   # Renovar token
+POST /api/auth/logout    # Logout
+```
+
+#### **Q&A**
+```bash
+POST /api/questions          # Fazer pergunta à IA
+GET  /api/questions/my-questions  # Listar minhas perguntas
+GET  /api/questions/company  # Listar perguntas da empresa (admin)
+GET  /api/questions/:id      # Detalhes de uma pergunta
+```
+
+#### **Admin**
+```bash
+GET /api/admin/stats         # Estatísticas da empresa
+GET /api/admin/top-users     # Top usuários mais ativos
+```
+
+## 🚀 Deploy
+
+### **Usando Docker**
+```bash
+# Build da imagem
+npm run docker:build
+
+# Deploy completo
+npm run docker:up
+```
+
+### **Deploy Manual**
+```bash
+# Build
+npm run build
+
+# Configurar variáveis de ambiente de produção
+export NODE_ENV=production
+export DATABASE_URL=sua-url-do-banco-producao
+export JWT_SECRET=seu-jwt-secret-producao
+
+# Migrar banco
+npm run db:migrate
+
+# Iniciar
+npm start
+```
+
+## 🗃️ Estrutura do Projeto
+
+```
+src/
+├── controllers/     # Controladores das rotas
+├── middleware/      # Middlewares (auth, validation, rate limiting)
+├── routes/          # Definição das rotas
+├── services/        # Lógica de negócio
+├── types/           # Tipos TypeScript
+├── utils/           # Utilitários (database, logger, redis)
+└── test/            # Configuração de testes
+
+prisma/
+├── schema.prisma    # Schema do banco
+├── migrations/      # Migrações
+└── seed.js          # Dados de exemplo
+```
+
+## 🧑‍💻 Scripts Disponíveis
+
+```bash
+npm run dev          # Desenvolvimento (hot reload)
+npm run build        # Build TypeScript
+npm start            # Iniciar aplicação (produção)
+npm test             # Executar testes
+npm run lint         # Verificar código
+npm run format       # Formatar código
+
+# Banco de dados
+npm run db:migrate   # Executar migrações
+npm run db:generate  # Gerar cliente Prisma
+npm run db:studio    # Interface web do banco
+npm run db:seed      # Popular dados de exemplo
+
+# Docker
+npm run docker:up    # Subir ambiente completo
+npm run docker:down  # Parar ambiente
+npm run docker:build # Build da imagem
+```
+
+
+## 📝 Variáveis de Ambiente
+
+| Variável | Descrição | Padrão |
+|----------|-----------|--------|
+| `NODE_ENV` | Ambiente de execução | `development` |
+| `PORT` | Porta da aplicação | `3000` |
+| `DATABASE_URL` | URL do PostgreSQL | - |
+| `JWT_SECRET` | Secret para JWT | - |
+| `JWT_REFRESH_SECRET` | Secret para Refresh Token | - |
+| `OPENAI_API_KEY` | Chave da OpenAI (opcional) | - |
+| `REDIS_URL` | URL do Redis (opcional) | `redis://localhost:6379` |
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+## 👨‍💻 Autor
+
+**Thiago Moreira**
+
+---
+
+🚀 **Desenvolvido como parte do Desafio Técnico Backend MedSenior**

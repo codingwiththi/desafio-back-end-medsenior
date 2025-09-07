@@ -22,7 +22,8 @@ export class AuthController {
       );
 
       // Don't send password in response
-      const { password: _, ...userWithoutPassword } = result.user;
+      const { password: _password, ...userWithoutPassword } = result.user;
+      void _password; // Suppress unused variable warning
 
       res.status(201).json(
         createSuccessResponse(
@@ -48,7 +49,8 @@ export class AuthController {
       const result = await this.authService.login(email, password);
 
       // Don't send password in response
-      const { password: _, ...userWithoutPassword } = result.user;
+      const { password: _password2, ...userWithoutPassword } = result.user;
+      void _password2; // Suppress unused variable warning
 
       res.status(200).json(
         createSuccessResponse(

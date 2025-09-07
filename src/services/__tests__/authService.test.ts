@@ -1,5 +1,4 @@
-import { AuthService } from '../services/authService';
-import { prisma } from '../test/setup';
+import { AuthService } from '@/services/authService';
 
 describe('AuthService', () => {
   let authService: AuthService;

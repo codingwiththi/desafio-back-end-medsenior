@@ -1,10 +1,17 @@
-FROM node:18-alpine
+FROM node:20-bookworm-slim
 
 WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
 COPY prisma ./prisma/
+
+# Install system dependencies required by Prisma (OpenSSL) and Node
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    openssl \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install dependencies
 RUN npm ci

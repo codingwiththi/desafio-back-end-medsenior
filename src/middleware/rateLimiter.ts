@@ -1,5 +1,6 @@
 import rateLimit from 'express-rate-limit';
 import { Request } from 'express';
+import { AuthRequest } from '@/types/express';
 
 // Create rate limiter for API calls
 export const apiLimiter = rateLimit({
@@ -13,7 +14,7 @@ export const apiLimiter = rateLimit({
   legacyHeaders: false,
   keyGenerator: (req: Request) => {
     // Use user ID if authenticated, otherwise use IP
-    return (req as any).user?.userId || req.ip;
+    return (req as AuthRequest).user?.userId || req.ip || 'unknown';
   },
 });
 
