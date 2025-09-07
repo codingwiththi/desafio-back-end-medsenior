@@ -1,4 +1,11 @@
-import { validateSchema, registerSchema, loginSchema, questionSchema, validateQuery, paginationSchema } from '../validation';
+import {
+  validateSchema,
+  registerSchema,
+  loginSchema,
+  questionSchema,
+  validateQuery,
+  paginationSchema,
+} from '../validation';
 import { createErrorResponse } from '../../utils/response';
 
 const mockRes = () => {
@@ -10,7 +17,14 @@ const mockRes = () => {
 
 describe('middleware/validation', () => {
   it('validateSchema should pass with valid register body', () => {
-    const req: any = { body: { email: 'e@e.com', password: '123456', name: 'Name', companyName: 'Co' } };
+    const req: any = {
+      body: {
+        email: 'e@e.com',
+        password: '123456',
+        name: 'Name',
+        companyName: 'Co',
+      },
+    };
     const res = mockRes();
     const next = jest.fn();
 
@@ -29,7 +43,9 @@ describe('middleware/validation', () => {
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalled();
     const payload = res.json.mock.calls[0][0];
-    expect(payload).toEqual(expect.objectContaining(createErrorResponse(expect.any(String))));
+    expect(payload).toEqual(
+      expect.objectContaining(createErrorResponse(expect.any(String))),
+    );
     expect(next).not.toHaveBeenCalled();
   });
 

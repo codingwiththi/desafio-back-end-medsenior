@@ -1,6 +1,10 @@
 import { Router } from 'express';
 import { AuthController } from '@/controllers/authController';
-import { validateSchema, registerSchema, loginSchema } from '@/middleware/validation';
+import {
+  validateSchema,
+  registerSchema,
+  loginSchema,
+} from '@/middleware/validation';
 import { authLimiter } from '@/middleware/rateLimiter';
 
 const router = Router();
@@ -17,11 +21,7 @@ router.post(
 );
 
 // Login route
-router.post(
-  '/login',
-  validateSchema(loginSchema),
-  authController.login,
-);
+router.post('/login', validateSchema(loginSchema), authController.login);
 
 // Refresh token route
 router.post('/refresh', authController.refreshToken);

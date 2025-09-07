@@ -2,7 +2,8 @@ import { PrismaClient } from '@prisma/client';
 
 // Ensure minimal env vars for tests
 process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-jwt-secret';
-process.env.JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'test-refresh-secret';
+process.env.JWT_REFRESH_SECRET =
+  process.env.JWT_REFRESH_SECRET || 'test-refresh-secret';
 
 // Mock PrismaClient for tests
 const prisma = new PrismaClient();

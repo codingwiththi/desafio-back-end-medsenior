@@ -1,7 +1,12 @@
 import { Router } from 'express';
 import { QuestionController } from '@/controllers/questionController';
 import { authenticateToken, requireAdmin } from '@/middleware/auth';
-import { validateSchema, questionSchema, validateQuery, paginationSchema } from '@/middleware/validation';
+import {
+  validateSchema,
+  questionSchema,
+  validateQuery,
+  paginationSchema,
+} from '@/middleware/validation';
 
 const router = Router();
 const questionController = new QuestionController();

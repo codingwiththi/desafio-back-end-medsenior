@@ -21,14 +21,25 @@ export class AdminController {
       const { companyId } = req.user;
       const days = parseInt(req.query?.days as string) || 30;
 
-      const stats = await this.questionService.getQuestionStats(companyId, days);
-
-      res.status(200).json(
-        createSuccessResponse(stats, 'Question statistics retrieved successfully'),
+      const stats = await this.questionService.getQuestionStats(
+        companyId,
+        days,
       );
+
+      res
+        .status(200)
+        .json(
+          createSuccessResponse(
+            stats,
+            'Question statistics retrieved successfully',
+          ),
+        );
     } catch (error) {
       logger.error('Get question stats error:', error);
-      const message = error instanceof Error ? error.message : 'Failed to retrieve statistics';
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Failed to retrieve statistics';
       res.status(500).json(createErrorResponse(message));
     }
   };
@@ -45,17 +56,21 @@ export class AdminController {
 
       const stats = await this.questionService.getTopUsers(companyId, limit);
 
-      res.status(200).json(
-        createSuccessResponse(stats, 'Top users retrieved successfully'),
-      );
+      res
+        .status(200)
+        .json(createSuccessResponse(stats, 'Top users retrieved successfully'));
     } catch (error) {
       logger.error('Get top users error:', error);
-      const message = error instanceof Error ? error.message : 'Failed to retrieve top users';
+      const message =
+        error instanceof Error ? error.message : 'Failed to retrieve top users';
       res.status(500).json(createErrorResponse(message));
     }
   };
 
-  getDashboardSummary = async (req: AuthRequest, res: Response): Promise<void> => {
+  getDashboardSummary = async (
+    req: AuthRequest,
+    res: Response,
+  ): Promise<void> => {
     try {
       if (!req.user) {
         res.status(401).json(createErrorResponse('Authentication required'));
@@ -83,12 +98,20 @@ export class AdminController {
         generatedAt: new Date().toISOString(),
       };
 
-      res.status(200).json(
-        createSuccessResponse(summary, 'Dashboard summary retrieved successfully'),
-      );
+      res
+        .status(200)
+        .json(
+          createSuccessResponse(
+            summary,
+            'Dashboard summary retrieved successfully',
+          ),
+        );
     } catch (error) {
       logger.error('Get dashboard summary error:', error);
-      const message = error instanceof Error ? error.message : 'Failed to retrieve dashboard summary';
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Failed to retrieve dashboard summary';
       res.status(500).json(createErrorResponse(message));
     }
   };

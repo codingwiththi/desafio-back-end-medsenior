@@ -133,7 +133,9 @@ describe('AuthService', () => {
     });
 
     it('should ignore logout with unknown token (idempotent)', async () => {
-      await expect(authService.logout('non-existent-token')).resolves.toBeUndefined();
+      await expect(
+        authService.logout('non-existent-token'),
+      ).resolves.toBeUndefined();
     });
   });
 
@@ -146,7 +148,12 @@ describe('AuthService', () => {
         'Dup Co',
       );
       await expect(
-        authService.register('dup@example.com', 'password123', 'Dup2', 'Dup Co'),
+        authService.register(
+          'dup@example.com',
+          'password123',
+          'Dup2',
+          'Dup Co',
+        ),
       ).rejects.toThrow('User already exists with this email');
     });
   });

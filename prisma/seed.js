@@ -74,7 +74,8 @@ async function main() {
   await prisma.question.create({
     data: {
       question: 'What is artificial intelligence?',
-      answer: 'Artificial Intelligence (AI) refers to the simulation of human intelligence in machines that are programmed to think and learn like humans.',
+      answer:
+        'Artificial Intelligence (AI) refers to the simulation of human intelligence in machines that are programmed to think and learn like humans.',
       userId: user1.id,
       companyId: company1.id,
     },
@@ -83,7 +84,8 @@ async function main() {
   await prisma.question.create({
     data: {
       question: 'How does machine learning work?',
-      answer: 'Machine learning is a subset of AI that enables computers to learn and improve from experience without being explicitly programmed.',
+      answer:
+        'Machine learning is a subset of AI that enables computers to learn and improve from experience without being explicitly programmed.',
       userId: user2.id,
       companyId: company2.id,
     },

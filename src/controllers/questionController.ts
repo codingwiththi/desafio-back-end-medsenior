@@ -28,12 +28,13 @@ export class QuestionController {
         companyId,
       );
 
-      res.status(201).json(
-        createSuccessResponse(result, 'Question processed successfully'),
-      );
+      res
+        .status(201)
+        .json(createSuccessResponse(result, 'Question processed successfully'));
     } catch (error) {
       logger.error('Ask question error:', error);
-      const message = error instanceof Error ? error.message : 'Failed to process question';
+      const message =
+        error instanceof Error ? error.message : 'Failed to process question';
       res.status(500).json(createErrorResponse(message));
     }
   };
@@ -57,17 +58,23 @@ export class QuestionController {
         pagination,
       );
 
-      res.status(200).json(
-        createSuccessResponse(result, 'Questions retrieved successfully'),
-      );
+      res
+        .status(200)
+        .json(
+          createSuccessResponse(result, 'Questions retrieved successfully'),
+        );
     } catch (error) {
       logger.error('Get user questions error:', error);
-      const message = error instanceof Error ? error.message : 'Failed to retrieve questions';
+      const message =
+        error instanceof Error ? error.message : 'Failed to retrieve questions';
       res.status(500).json(createErrorResponse(message));
     }
   };
 
-  getCompanyQuestions = async (req: AuthRequest, res: Response): Promise<void> => {
+  getCompanyQuestions = async (
+    req: AuthRequest,
+    res: Response,
+  ): Promise<void> => {
     try {
       if (!req.user) {
         res.status(401).json(createErrorResponse('Authentication required'));
@@ -85,12 +92,20 @@ export class QuestionController {
         pagination,
       );
 
-      res.status(200).json(
-        createSuccessResponse(result, 'Company questions retrieved successfully'),
-      );
+      res
+        .status(200)
+        .json(
+          createSuccessResponse(
+            result,
+            'Company questions retrieved successfully',
+          ),
+        );
     } catch (error) {
       logger.error('Get company questions error:', error);
-      const message = error instanceof Error ? error.message : 'Failed to retrieve company questions';
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Failed to retrieve company questions';
       res.status(500).json(createErrorResponse(message));
     }
   };
@@ -120,12 +135,15 @@ export class QuestionController {
         return;
       }
 
-      res.status(200).json(
-        createSuccessResponse(question, 'Question retrieved successfully'),
-      );
+      res
+        .status(200)
+        .json(
+          createSuccessResponse(question, 'Question retrieved successfully'),
+        );
     } catch (error) {
       logger.error('Get question by ID error:', error);
-      const message = error instanceof Error ? error.message : 'Failed to retrieve question';
+      const message =
+        error instanceof Error ? error.message : 'Failed to retrieve question';
       res.status(500).json(createErrorResponse(message));
     }
   };

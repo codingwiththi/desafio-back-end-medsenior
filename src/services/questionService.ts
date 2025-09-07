@@ -2,7 +2,12 @@ import { Question } from '@prisma/client';
 import { prisma } from '@/utils/database';
 import { AiService } from './aiService';
 import { logger } from '@/utils/logger';
-import { PaginationParams, PaginationResponse, QuestionStats, UserStats } from '@/types/api';
+import {
+  PaginationParams,
+  PaginationResponse,
+  QuestionStats,
+  UserStats,
+} from '@/types/api';
 
 export class QuestionService {
   private aiService: AiService;
@@ -157,7 +162,7 @@ export class QuestionService {
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
 
-    const stats = await prisma.$queryRaw`
+    const stats = (await prisma.$queryRaw`
       SELECT 
         DATE("createdAt") as date,
         COUNT(*)::int as count
@@ -166,7 +171,7 @@ export class QuestionService {
         AND "createdAt" >= ${startDate}
       GROUP BY DATE("createdAt")
       ORDER BY date DESC
-    ` as QuestionStats[];
+    `) as QuestionStats[];
 
     return stats;
   }
@@ -175,7 +180,7 @@ export class QuestionService {
     companyId: string,
     limit: number = 10,
   ): Promise<UserStats[]> {
-    const stats = await prisma.$queryRaw`
+    const stats = (await prisma.$queryRaw`
       SELECT 
         u.id as "userId",
         u.name as "userName",
@@ -186,7 +191,7 @@ export class QuestionService {
       GROUP BY u.id, u.name
       ORDER BY "questionCount" DESC
       LIMIT ${limit}
-    ` as UserStats[];
+    `) as UserStats[];
 
     return stats;
   }

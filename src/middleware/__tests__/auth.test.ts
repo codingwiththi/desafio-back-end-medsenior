@@ -20,7 +20,9 @@ describe('middleware/auth', () => {
     authenticateToken(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(401);
-    expect(res.json).toHaveBeenCalledWith(createErrorResponse('Access token required'));
+    expect(res.json).toHaveBeenCalledWith(
+      createErrorResponse('Access token required'),
+    );
     expect(next).not.toHaveBeenCalled();
   });
 
@@ -32,12 +34,19 @@ describe('middleware/auth', () => {
     authenticateToken(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(403);
-    expect(res.json).toHaveBeenCalledWith(createErrorResponse('Invalid or expired token'));
+    expect(res.json).toHaveBeenCalledWith(
+      createErrorResponse('Invalid or expired token'),
+    );
     expect(next).not.toHaveBeenCalled();
   });
 
   it('authenticateToken should set req.user and call next with valid token', () => {
-    const payload = { userId: 'u1', email: 'e@e.com', role: 'USER', companyId: 'c1' };
+    const payload = {
+      userId: 'u1',
+      email: 'e@e.com',
+      role: 'USER',
+      companyId: 'c1',
+    };
     const token = (jwt as any).sign(payload, secret, { expiresIn: '10m' });
 
     const req: any = { headers: { authorization: `Bearer ${token}` } };
@@ -61,7 +70,9 @@ describe('middleware/auth', () => {
       authenticateToken(req, res, next);
 
       expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith(createErrorResponse('JWT configuration error'));
+      expect(res.json).toHaveBeenCalledWith(
+        createErrorResponse('JWT configuration error'),
+      );
       expect(next).not.toHaveBeenCalled();
     } finally {
       process.env.JWT_SECRET = prev;
@@ -76,7 +87,9 @@ describe('middleware/auth', () => {
     requireAdmin(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(403);
-    expect(res.json).toHaveBeenCalledWith(createErrorResponse('Insufficient permissions'));
+    expect(res.json).toHaveBeenCalledWith(
+      createErrorResponse('Insufficient permissions'),
+    );
     expect(next).not.toHaveBeenCalled();
   });
 

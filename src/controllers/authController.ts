@@ -37,7 +37,8 @@ export class AuthController {
       );
     } catch (error) {
       logger.error('Registration error:', error);
-      const message = error instanceof Error ? error.message : 'Registration failed';
+      const message =
+        error instanceof Error ? error.message : 'Registration failed';
       res.status(400).json(createErrorResponse(message));
     }
   };
@@ -80,12 +81,13 @@ export class AuthController {
 
       const tokens = await this.authService.refreshToken(refreshToken);
 
-      res.status(200).json(
-        createSuccessResponse(tokens, 'Token refreshed successfully'),
-      );
+      res
+        .status(200)
+        .json(createSuccessResponse(tokens, 'Token refreshed successfully'));
     } catch (error) {
       logger.error('Token refresh error:', error);
-      const message = error instanceof Error ? error.message : 'Token refresh failed';
+      const message =
+        error instanceof Error ? error.message : 'Token refresh failed';
       res.status(401).json(createErrorResponse(message));
     }
   };
@@ -98,14 +100,10 @@ export class AuthController {
         await this.authService.logout(refreshToken);
       }
 
-      res.status(200).json(
-        createSuccessResponse(null, 'Logout successful'),
-      );
+      res.status(200).json(createSuccessResponse(null, 'Logout successful'));
     } catch (error) {
       logger.error('Logout error:', error);
-      res.status(200).json(
-        createSuccessResponse(null, 'Logout successful'),
-      );
+      res.status(200).json(createSuccessResponse(null, 'Logout successful'));
     }
   };
 }

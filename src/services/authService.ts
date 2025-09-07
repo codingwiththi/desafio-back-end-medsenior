@@ -14,11 +14,11 @@ export class AuthService {
   constructor() {
     const jwtSecret = process.env.JWT_SECRET;
     const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET;
-    
+
     if (!jwtSecret || !jwtRefreshSecret) {
       throw new Error('JWT secrets must be configured');
     }
-    
+
     this.jwtSecret = jwtSecret;
     this.jwtRefreshSecret = jwtRefreshSecret;
     this.jwtExpiresIn = process.env.JWT_EXPIRES_IN || '15m';
@@ -80,7 +80,10 @@ export class AuthService {
     return { user, company, tokens };
   }
 
-  async login(email: string, password: string): Promise<{ user: User; company: Company; tokens: AuthTokens }> {
+  async login(
+    email: string,
+    password: string,
+  ): Promise<{ user: User; company: Company; tokens: AuthTokens }> {
     // Find user with company
     const user = await prisma.user.findUnique({
       where: { email },
@@ -124,7 +127,10 @@ export class AuthService {
       }
 
       // Generate new tokens
-      const tokens = await this.generateTokens(tokenRecord.user, tokenRecord.user.companyId);
+      const tokens = await this.generateTokens(
+        tokenRecord.user,
+        tokenRecord.user.companyId,
+      );
 
       // Remove old refresh token
       await prisma.refreshToken.delete({
@@ -143,7 +149,10 @@ export class AuthService {
     });
   }
 
-  private async generateTokens(user: User, companyId: string): Promise<AuthTokens> {
+  private async generateTokens(
+    user: User,
+    companyId: string,
+  ): Promise<AuthTokens> {
     const payload = {
       userId: user.id,
       email: user.email,
@@ -163,11 +172,15 @@ export class AuthService {
       iat: Math.floor(Date.now() / 1000),
       jti: `${user.id}-${Date.now()}`, // Unique identifier
     };
-    
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const refreshToken = (jwt as any).sign(refreshPayload, this.jwtRefreshSecret, {
-      expiresIn: this.jwtRefreshExpiresIn,
-    });
+    const refreshToken = (jwt as any).sign(
+      refreshPayload,
+      this.jwtRefreshSecret,
+      {
+        expiresIn: this.jwtRefreshExpiresIn,
+      },
+    );
 
     // Store refresh token in database
     const expiresAt = new Date();

@@ -7,11 +7,11 @@ export const getRedisClient = (): Redis | null => {
   if (!redis && process.env.REDIS_URL) {
     try {
       redis = new Redis(process.env.REDIS_URL);
-      
+
       redis.on('connect', () => {
         logger.info('✅ Connected to Redis');
       });
-      
+
       redis.on('error', (err) => {
         logger.error('❌ Redis connection error:', err);
       });
@@ -19,7 +19,7 @@ export const getRedisClient = (): Redis | null => {
       logger.error('❌ Failed to connect to Redis:', error);
     }
   }
-  
+
   return redis;
 };
 

@@ -83,7 +83,9 @@ describe('QuestionService', () => {
       userContext.companyId,
       { page: 1, limit: 50 },
     );
-    expect(res.data.find((q) => q.companyId === other.company.id)).toBeUndefined();
+    expect(
+      res.data.find((q) => q.companyId === other.company.id),
+    ).toBeUndefined();
   });
 
   it('should fetch stats and top users for admin dashboard', async () => {
@@ -97,14 +99,20 @@ describe('QuestionService', () => {
       ),
     );
 
-  const stats = await questionService.getQuestionStats(userContext.companyId, 7);
-  const topUsers = await questionService.getTopUsers(userContext.companyId, 5);
+    const stats = await questionService.getQuestionStats(
+      userContext.companyId,
+      7,
+    );
+    const topUsers = await questionService.getTopUsers(
+      userContext.companyId,
+      5,
+    );
 
-  expect(Array.isArray(stats)).toBe(true);
-  expect(Array.isArray(topUsers)).toBe(true);
-  expect(topUsers.length).toBeGreaterThan(0);
-  expect(topUsers[0]!).toHaveProperty('userId');
-  expect(topUsers[0]!.questionCount).toBeGreaterThan(0);
+    expect(Array.isArray(stats)).toBe(true);
+    expect(Array.isArray(topUsers)).toBe(true);
+    expect(topUsers.length).toBeGreaterThan(0);
+    expect(topUsers[0]!).toHaveProperty('userId');
+    expect(topUsers[0]!.questionCount).toBeGreaterThan(0);
   });
 
   it('should return null when getting a question by id from another company', async () => {

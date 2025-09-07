@@ -5,16 +5,16 @@ import { createErrorResponse } from '@/utils/response';
 export const validateSchema = (schema: Joi.ObjectSchema) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     const { error } = schema.validate(req.body);
-    
+
     if (error) {
       const errorMessage = error.details
         .map((detail) => detail.message)
         .join(', ');
-      
+
       res.status(400).json(createErrorResponse(errorMessage));
       return;
     }
-    
+
     next();
   };
 };
@@ -44,16 +44,16 @@ export const paginationSchema = Joi.object({
 export const validateQuery = (schema: Joi.ObjectSchema) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     const { error, value } = schema.validate(req.query);
-    
+
     if (error) {
       const errorMessage = error.details
         .map((detail) => detail.message)
         .join(', ');
-      
+
       res.status(400).json(createErrorResponse(errorMessage));
       return;
     }
-    
+
     req.query = value;
     next();
   };

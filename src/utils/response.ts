@@ -7,11 +7,11 @@ export const createResponse = <T>(
   error?: string,
 ): ApiResponse<T> => {
   const response: ApiResponse<T> = { success };
-  
+
   if (data !== undefined) response.data = data;
   if (message !== undefined) response.message = message;
   if (error !== undefined) response.error = error;
-  
+
   return response;
 };
 

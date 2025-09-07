@@ -25,11 +25,8 @@ export const authenticateToken = (
   }
 
   try {
-    const decoded = jwt.verify(
-      token,
-      jwtSecret,
-    ) as JwtPayload;
-    
+    const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
+
     req.user = decoded;
     next();
   } catch (error) {
