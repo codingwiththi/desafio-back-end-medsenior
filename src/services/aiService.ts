@@ -14,7 +14,7 @@ export class AiService {
 
   constructor() {
     this.apiKey = process.env.OPENAI_API_KEY || '';
-    this.model = process.env.AI_MODEL || 'gpt-3.5-turbo';
+  this.model = process.env.AI_MODEL || 'gpt-4o-mini';
     this.baseUrl = 'https://api.openai.com/v1';
   }
 

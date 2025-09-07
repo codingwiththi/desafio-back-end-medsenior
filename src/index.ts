@@ -6,6 +6,10 @@ import { logger } from './utils/logger';
 import { apiLimiter } from './middleware/rateLimiter';
 import routes from './routes';
 import { getRedisClient } from './utils/redis';
+import path from 'path';
+import fs from 'fs';
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'yaml';
 
 // Load environment variables
 dotenv.config();
@@ -39,6 +43,17 @@ app.use((req, res, next) => {
 // API routes
 app.use('/api', routes);
 
+// Swagger/OpenAPI docs
+try {
+  const specPath = path.join(__dirname, '..', 'openapi.yaml');
+  const specFile = fs.readFileSync(specPath, 'utf8');
+  const openapiDoc = yaml.parse(specFile);
+  app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(openapiDoc));
+  logger.info('Swagger UI available at /api/docs');
+} catch (err) {
+  logger.warn('OpenAPI spec not found or failed to load.');
+}
+
 // Error handling middleware
 app.use((err: Error, req: express.Request, res: express.Response, _next: express.NextFunction) => {
   void _next; // Suppress unused variable warning
@@ -70,9 +85,9 @@ const startServer = async (): Promise<void> => {
     }
 
     const server = app.listen(PORT, () => {
-      logger.info(`🚀 Server running on port ${PORT}`);
-      logger.info(`📚 API documentation available at http://localhost:${PORT}/api/health`);
-      logger.info(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+      logger.info(`Server running on port ${PORT}`);
+      logger.info(`Health endpoint: http://localhost:${PORT}/api/health`);
+      logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
     });
 
     // Handle graceful shutdown

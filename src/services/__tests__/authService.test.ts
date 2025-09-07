@@ -1,4 +1,4 @@
-import { AuthService } from '@/services/authService';
+import { AuthService } from '../authService';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -110,6 +110,44 @@ describe('AuthService', () => {
       await expect(
         authService.login('test@example.com', 'wrongpassword'),
       ).rejects.toThrow('Invalid credentials');
+    });
+  });
+
+  describe('refresh and logout', () => {
+    it('should issue new tokens and invalidate the old refresh token', async () => {
+      const { tokens } = await authService.register(
+        'rt@example.com',
+        'password123',
+        'RT User',
+        'RT Company',
+      );
+
+      const newTokens = await authService.refreshToken(tokens.refreshToken);
+      expect(newTokens.accessToken).toBeDefined();
+      expect(newTokens.refreshToken).toBeDefined();
+
+      // old token should no longer be valid
+      await expect(
+        authService.refreshToken(tokens.refreshToken),
+      ).rejects.toThrow('Invalid refresh token');
+    });
+
+    it('should ignore logout with unknown token (idempotent)', async () => {
+      await expect(authService.logout('non-existent-token')).resolves.toBeUndefined();
+    });
+  });
+
+  describe('register validations', () => {
+    it('should not allow reusing the same email', async () => {
+      await authService.register(
+        'dup@example.com',
+        'password123',
+        'Dup User',
+        'Dup Co',
+      );
+      await expect(
+        authService.register('dup@example.com', 'password123', 'Dup2', 'Dup Co'),
+      ).rejects.toThrow('User already exists with this email');
     });
   });
 });
