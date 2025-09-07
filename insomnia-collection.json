@@ -1,0 +1,238 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2024-01-01T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "wrk_01",
+      "_type": "workspace",
+      "name": "MedSenior API",
+      "description": "Multi-tenant AI Q&A Platform API"
+    },
+    {
+      "_id": "env_01",
+      "_type": "environment",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000/api",
+        "access_token": "",
+        "refresh_token": ""
+      }
+    },
+    {
+      "_id": "fld_auth",
+      "_type": "request_group",
+      "name": "Authentication",
+      "environment": {},
+      "metaSortKey": -1
+    },
+    {
+      "_id": "req_register",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Register",
+      "url": "{{ _.base_url }}/auth/register",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"admin@techcorp.com\",\n  \"password\": \"123456\",\n  \"name\": \"Admin User\",\n  \"companyName\": \"TechCorp Inc.\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "_id": "req_login",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Login",
+      "url": "{{ _.base_url }}/auth/login",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"admin@techcorp.com\",\n  \"password\": \"123456\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "_id": "req_refresh",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Refresh Token",
+      "url": "{{ _.base_url }}/auth/refresh",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"refreshToken\": \"{{ _.refresh_token }}\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "_id": "req_logout",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Logout",
+      "url": "{{ _.base_url }}/auth/logout",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"refreshToken\": \"{{ _.refresh_token }}\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "_id": "fld_questions",
+      "_type": "request_group",
+      "name": "Questions",
+      "environment": {},
+      "metaSortKey": -2
+    },
+    {
+      "_id": "req_ask_question",
+      "_type": "request",
+      "parentId": "fld_questions",
+      "name": "Ask Question",
+      "url": "{{ _.base_url }}/questions",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"question\": \"What is artificial intelligence and how does it work?\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_my_questions",
+      "_type": "request",
+      "parentId": "fld_questions",
+      "name": "My Questions",
+      "url": "{{ _.base_url }}/questions/my-questions?page=1&limit=10",
+      "method": "GET",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_company_questions",
+      "_type": "request",
+      "parentId": "fld_questions",
+      "name": "Company Questions",
+      "url": "{{ _.base_url }}/questions/company?page=1&limit=10",
+      "method": "GET",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_question_by_id",
+      "_type": "request",
+      "parentId": "fld_questions",
+      "name": "Question by ID",
+      "url": "{{ _.base_url }}/questions/QUESTION_ID_HERE",
+      "method": "GET",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "fld_admin",
+      "_type": "request_group",
+      "name": "Admin",
+      "environment": {},
+      "metaSortKey": -3
+    },
+    {
+      "_id": "req_dashboard",
+      "_type": "request",
+      "parentId": "fld_admin",
+      "name": "Dashboard Summary",
+      "url": "{{ _.base_url }}/admin/dashboard",
+      "method": "GET",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_question_stats",
+      "_type": "request",
+      "parentId": "fld_admin",
+      "name": "Question Statistics",
+      "url": "{{ _.base_url }}/admin/stats/questions?days=30",
+      "method": "GET",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_top_users",
+      "_type": "request",
+      "parentId": "fld_admin",
+      "name": "Top Users",
+      "url": "{{ _.base_url }}/admin/stats/users?limit=10",
+      "method": "GET",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "fld_misc",
+      "_type": "request_group",
+      "name": "Miscellaneous",
+      "environment": {},
+      "metaSortKey": -4
+    },
+    {
+      "_id": "req_health",
+      "_type": "request",
+      "parentId": "fld_misc",
+      "name": "Health Check",
+      "url": "{{ _.base_url }}/health",
+      "method": "GET"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "medsenior-environment",
+  "name": "MedSenior Development",
+  "values": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api",
+      "enabled": true
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}
